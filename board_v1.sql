@@ -83,11 +83,114 @@ CREATE TABLE refresh_tokens (
     COLLATE = utf8mb4_unicode_ci
     COMMENT = '리프레시 토큰 저장 테이블';
 
+# === Board / Category (게시판 / 게시판 카테고리) === #
+DROP TABLE IF EXISTS boards;
+DROP TABLE IF EXISTS board_categories;
 
+CREATE TABLE board_categories (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL COMMENT '카테고리명',
+    
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    
+    CONSTRAINT `uk_board_category_name` UNIQUE (name)
+)
+	ENGINE=InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = '게시판 카테고리';
 
+CREATE TABLE boards (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    
+    title VARCHAR(150) NOT NULL COMMENT '글 제목',
+    content LONGTEXT NOT NULL COMMENT '글 제목',
+    
+    view_count BIGINT NOT NULL DEFAULT 0 COMMENT '조회수',
+    is_pinned BOOLEAN NOT NULL DEFAULT FALSE COMMENT '상단 고정 여부',
+    
+    user_id BIGINT NOT NULL COMMENT '작성자',
+    category_id BIGINT NOT NULL COMMENT '카테고리 ID',
+    
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    
+    INDEX `idx_boards_created_at` (created_at),
+    INDEX `idx_boards_updated_at` (updated_at),
+    
+    CONSTRAINT `fk_board_user` FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT `fk_board_category` FOREIGN KEY (category_id) REFERENCES board_categories(id)
+)
+	ENGINE=InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = '게시글';
+    
+# === Comment (게시글 댓글) === #
+CREATE TABLE comments (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content LONGTEXT NOT NULL COMMENT '댓글 내용',
+    
+    board_id BIGINT NOT NULL COMMENT '게시글 ID',
+    user_id BIGINT NOT NULL COMMENT '작성자 ID',
+    
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    
+    INDEX `idx_comments_board_id` (board_id),
+    INDEX `idx_comments_user_id` (user_id),
+    
+    CONSTRAINT `fk_comment_board` FOREIGN KEY (board_id) REFERENCES boards(id),
+    CONSTRAINT `fk_comment_user` FOREIGN KEY (user_id) REFERENCES users(id)
+)
+	ENGINE=InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = '게시글 댓글';
+    
+# === BoardLike (게시글 좋아요) === #
+CREATE TABLE board_likes (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    
+    board_id BIGINT NOT NULL COMMENT '게시글 ID',
+    user_id BIGINT NOT NULL COMMENT '작성자 ID',
+    
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    
+    UNIQUE KEY `uk_board_like_user` (board_id, user_id),
+    INDEX `idx_board_like_board` (board_id),
+    INDEX `idx_board_like_user` (user_id),
+    
+    CONSTRAINT `fk_board_like_board` FOREIGN KEY (board_id) REFERENCES boards(id),
+    CONSTRAINT `fk_board_like_user` FOREIGN KEY (user_id) REFERENCES users(id)
+)
+	ENGINE=InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = '게시글 좋아요';
 
-
-
-
+# === BoardDraft (게시글 임시저장) === #
+CREATE TABLE board_draft (
+	id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    
+    title VARCHAR(150) NULL COMMENT '임시 제목',
+    content LONGTEXT NULL COMMENT '임시 내용',
+    
+    user_id BIGINT NOT NULL,   
+    
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    
+    INDEX `idx_board_drafts_user_id` (user_id),
+    INDEX `idx_board_drafts_updated_at` (updated_at),
+    
+    CONSTRAINT `fk_board_draft_user` FOREIGN KEY (user_id) REFERENCES users(id)
+)
+	ENGINE=InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = '게시글 임시 저장';
 
 SET FOREIGN_KEY_CHECKS = 1;
