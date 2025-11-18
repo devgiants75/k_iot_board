@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.boardback.common.enums.Gender;
 import org.example.boardback.common.enums.RoleType;
+import org.example.boardback.entity.base.BaseTimeEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 )
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
