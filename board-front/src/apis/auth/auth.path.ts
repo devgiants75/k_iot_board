@@ -8,8 +8,8 @@ const AUTH_PREFIX = `${BASE}/auth`;
 // endpoint만 정의
 export const AUTH_PATH = {
   LOGIN: `${AUTH_PREFIX}/login`,
-  LOGOUT: `${AUTH_PREFIX}/login`,
-  REFRESH: `${AUTH_PREFIX}/login`,
+  LOGOUT: `${AUTH_PREFIX}/logout`,
+  REFRESH: `${AUTH_PREFIX}/refresh`,
   SIGNUP: `${AUTH_PREFIX}/signup`,
 
   PASSWORD_RESET: `${AUTH_PREFIX}/password/reset`,

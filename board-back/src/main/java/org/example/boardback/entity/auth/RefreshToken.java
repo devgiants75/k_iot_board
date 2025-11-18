@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.boardback.entity.base.BaseTimeEntity;
+import org.example.boardback.entity.user.User;
 
 import java.time.Instant;
 
@@ -24,8 +25,13 @@ public class RefreshToken extends BaseTimeEntity {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
-    private Long userId;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "user_id",
+            unique = true,
+            foreignKey = @ForeignKey(name = "fk_refresh_token_user")
+    )
+    private User user;
 
     @Column(nullable = false, length = 350)
     private String token;
@@ -34,7 +40,8 @@ public class RefreshToken extends BaseTimeEntity {
     private Instant expiry;
 
     @Builder
-    private RefreshToken(String token, Instant expiry) {
+    private RefreshToken(User user, String token, Instant expiry) {
+        this.user = user;
         this.token = token;
         this.expiry = expiry;
     }
