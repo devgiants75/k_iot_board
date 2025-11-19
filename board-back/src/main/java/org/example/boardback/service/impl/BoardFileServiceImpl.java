@@ -2,6 +2,7 @@ package org.example.boardback.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.example.boardback.dto.board.file.BoardFileListDto;
 import org.example.boardback.entity.board.Board;
 import org.example.boardback.entity.file.BoardFile;
 import org.example.boardback.entity.file.FileInfo;
@@ -13,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardFileServiceImpl {
     private final FileServiceImpl fileService;
     private final BoardFileRepository boardFileRepository;
@@ -41,5 +44,17 @@ public class BoardFileServiceImpl {
 
             boardFileRepository.save(boardFile);
         }
+    }
+
+    public List<BoardFileListDto> getFilesByBoard(Long boardId) {
+        final String baseURL = "/api/file/download/";
+
+        List<BoardFile> boardFiles = boardFileRepository.findByBoardIdOrderByDisplayOrderAsc(boardId);
+
+        return boardFiles.stream()
+                .map(BoardFile::getFileInfo)
+                .filter(Objects::nonNull) // FileInfo가 null일 가능성이 있는 경우 (안정성 강화)
+                .map(fileInfo -> BoardFileListDto.fromEntity(fileInfo, baseURL))
+                .toList();
     }
 }

@@ -2,6 +2,7 @@ package org.example.boardback.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.boardback.common.apis.BoardApi;
+import org.example.boardback.dto.board.file.BoardFileListDto;
 import org.example.boardback.service.impl.BoardFileServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,5 +23,18 @@ public class BoardController {
     ) {
         boardFileService.uploadBoardFiles(boardId, files);
         return ResponseEntity.ok("업로드 성공");
+    }
+
+    @GetMapping(BoardApi.ID_ONLY + "/files")
+    public ResponseEntity<List<BoardFileListDto>> getFilesByBoard(
+            @PathVariable Long boardId
+    ) {
+        List<BoardFileListDto> files = boardFileService.getFilesByBoard(boardId);
+
+        if (files == null || files.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 204 No Content
+        }
+
+        return ResponseEntity.ok(files); // 200 OK
     }
 }
