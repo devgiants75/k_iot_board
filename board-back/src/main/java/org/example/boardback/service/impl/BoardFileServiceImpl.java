@@ -3,6 +3,7 @@ package org.example.boardback.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.boardback.dto.board.file.BoardFileListDto;
+import org.example.boardback.dto.board.file.BoardFileUpdateRequestDto;
 import org.example.boardback.entity.board.Board;
 import org.example.boardback.entity.file.BoardFile;
 import org.example.boardback.entity.file.FileInfo;
@@ -130,5 +131,71 @@ public class BoardFileServiceImpl {
         boardFileRepository.delete(boardFile);
 
         fileService.deleteFile(fileInfo);
+    }
+
+    /**
+     * 수정 요청 시 전달 데이터
+     *  boardId
+     *  keepFileIds: List<Long> - 유지할 기존 파일 ID 목록
+     *  newFiles: List<MultipartFile> - 새로 업로드한 파일 목록
+     *
+     * [ 서버 처리 순서 ]
+     * 1. 기존 파일 목록 조회
+     * 2. 삭제 대상 선정      > 디스크/DB 삭제
+     * 3. 신규 파일 저장      > 디스크/DB board_files 추가
+     * 4. display_order 다시 정렬
+     * */
+    @Transactional
+    public void updateBoardFiles(Long boardId, BoardFileUpdateRequestDto dto) {
+        List<Long> keepIds = dto.getKeepFileIds() == null
+                ? List.of()
+                : dto.getKeepFileIds();
+
+        List<MultipartFile> newFiles = dto.getNewFiles();
+
+        // 1. 현재 DB에 저장된 파일 목록 조회
+        List<BoardFile> currentFiles = boardFileRepository.findByBoardIdOrderByDisplayOrderAsc(boardId);
+
+        // 2. 삭제 대상 선정
+        List<BoardFile> deleteTargets = currentFiles.stream()
+                // 현재 파일 목록을 순회하여
+                // 유지할 기존 File 목록(id)에 해당 파일의 info id 값이 포함되어 있지 않을 경우
+                // 해당(포함되어 있지 않은) 파일을 새로운 배열에 담기!
+                .filter(boardFile -> {
+                    FileInfo info = boardFile.getFileInfo();
+                    return info == null || !keepIds.contains(info.getId());
+                })
+                .toList();
+
+        // 3. 삭제 처리
+        for (BoardFile bf : deleteTargets) {
+            boardFileRepository.delete(bf);             // board_files 삭제
+            FileInfo info = bf.getFileInfo();
+            if (info != null) {
+                fileService.deleteFile(info);           // 디스크 + file_infos 삭제
+            }
+        }
+
+        // 4. 신규 파일 추가
+        if (newFiles != null && !newFiles.isEmpty()) {
+            System.out.println(newFiles);
+            Board board = boardRepository.findById(boardId)
+                    .orElseThrow(() -> new EntityNotFoundException("해당 id의 게시글이 없습니다."));
+
+            int maxOrder = boardFileRepository.findByBoardIdOrderByDisplayOrderAsc(boardId)
+                    .stream() // List<BoardFile>
+                    .mapToInt(b -> b.getDisplayOrder())
+                    .max()
+                    .orElse(-1);
+
+            System.out.println(maxOrder);
+            for (MultipartFile mf : newFiles) {
+                FileInfo info = fileService.saveBoardFile(boardId, mf);
+
+                BoardFile bf = BoardFile.of(board, info, ++maxOrder);
+
+                boardFileRepository.save(bf);
+            }
+        }
     }
 }

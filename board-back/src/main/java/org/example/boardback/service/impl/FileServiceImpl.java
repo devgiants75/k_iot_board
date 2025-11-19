@@ -6,6 +6,7 @@ import org.example.boardback.exception.FileStorageException;
 import org.example.boardback.repository.file.FileInfoRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -131,13 +132,14 @@ public class FileServiceImpl {
     }
 
     /** 파일 삭제 */
+    @Transactional
     public void deleteFile(FileInfo info) {
         try {
             Path path = Paths.get(info.getFilePath());
             Files.deleteIfExists(path);
-            fileInfoRepository.delete(info);
         } catch (Exception e) {
             throw new FileStorageException("파일 삭제 실패", e);
         }
+        fileInfoRepository.delete(info);
     }
 }
