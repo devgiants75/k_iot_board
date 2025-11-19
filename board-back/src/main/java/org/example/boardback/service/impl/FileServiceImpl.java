@@ -59,6 +59,12 @@ public class FileServiceImpl {
 
     /** 프로필 업로드 (1개만 유지) */
     public FileInfo saveUserProfile(MultipartFile file) {
+//        long maxSize = 5 * 1024 * 1024; // 5MB
+//
+//        if (file.getSize() > maxSize) {
+//            throw new IllegalArgumentException("파일 크기가 제한을 초과했습니다.");
+//        }
+
         if (file.isEmpty()) return null;
 
         try {
