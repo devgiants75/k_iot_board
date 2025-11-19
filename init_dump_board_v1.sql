@@ -23,38 +23,49 @@ DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS users;
 
-# =====================
-# 1️⃣ 파일 정보 테이블
-# =====================
+# === FILE_INFO (파일 정보 테이블) === #
 CREATE TABLE file_infos (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    original_name VARCHAR(255) NOT NULL,
-    stored_name VARCHAR(255) NOT NULL,
+    
+    original_name VARCHAR(255) NOT NULL COMMENT '원본 파일명',
+    stored_name VARCHAR(255) NOT NULL COMMENT 'UUID가 적용된 파일명',
     content_type VARCHAR(255),
     file_size BIGINT,
-    file_path VARCHAR(255) NOT NULL,
+    file_path VARCHAR(255) NOT NULL COMMENT '서버 내 실제 경로',
+    
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
 )
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+	ENGINE=InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = '파일 정보 테이블';
 
-# =====================
-# 2️⃣ 사용자 테이블
-# =====================
+
+# === USERS (사용자) === #
 CREATE TABLE users (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    nickname VARCHAR(50) NOT NULL,
-    gender VARCHAR(10),
+    
+    username VARCHAR(50) NOT NULL COMMENT '로그인 ID',
+    password VARCHAR(255) NOT NULL COMMENT 'Bcrypt 암호화 비밀번호',
+    email VARCHAR(255) NOT NULL COMMENT '사용자 이메일',
+    nickname VARCHAR(50) NOT NULL COMMENT '닉네임',
+    
+    gender VARCHAR(10) COMMENT '성별',
+    profile_file_id BIGINT NULL COMMENT '프로필 이미지 파일 ID',   -- 추가됨
+    
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    
     CONSTRAINT `uk_users_username` UNIQUE(username),
     CONSTRAINT `uk_users_email` UNIQUE(email),
     CONSTRAINT `uk_users_nickname` UNIQUE(nickname),
-    CONSTRAINT `chk_users_gender` CHECK(gender IN ('MALE', 'FEMALE', 'OTHER', 'NONE'))
+    CONSTRAINT `chk_users_gender` CHECK(gender IN ('MALE', 'FEMALE', 'OTHER', 'NONE')),
+    CONSTRAINT `fk_users_profile_file` FOREIGN KEY (profile_file_id) REFERENCES file_infos(id) ON DELETE SET NULL  -- FK 추가됨
 )
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+	ENGINE=InnoDB
+    DEFAULT CHARSET = utf8mb4
+    COLLATE = utf8mb4_unicode_ci
+    COMMENT = '사용자 기본 정보 테이블';
 
 -- Seed Users
 INSERT INTO users (username, password, email, nickname, gender, created_at, updated_at) VALUES
