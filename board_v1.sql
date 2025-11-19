@@ -1,4 +1,4 @@
-# DROP DATABASE IF EXISTS `board_v1`;
+DROP DATABASE IF EXISTS `board_v1`; 
 CREATE DATABASE IF NOT EXISTS `board_v1`
 	CHARACTER SET utf8mb4
     COLLATE utf8mb4_general_ci;
@@ -59,7 +59,7 @@ CREATE TABLE users (
     CONSTRAINT `uk_users_email` UNIQUE(email),
     CONSTRAINT `uk_users_nickname` UNIQUE(nickname),
     CONSTRAINT `chk_users_gender` CHECK(gender IN ('MALE', 'FEMALE', 'OTHER', 'NONE')),
-    CONSTRAINT `fk_users_profile_file` FOREIGN KEY (profile_file_id) REFERENCES file_info(id) ON DELETE SET NULL
+    CONSTRAINT `fk_users_profile_file` FOREIGN KEY (profile_file_id) REFERENCES file_infos(id) ON DELETE SET NULL
 )
 	ENGINE=InnoDB
     DEFAULT CHARSET = utf8mb4
@@ -166,7 +166,7 @@ CREATE TABLE board_files (
     display_order INT DEFAULT 0,
     
     CONSTRAINT `fk_board_files_board` FOREIGN KEY (board_id) REFERENCES boards(id) ON DELETE CASCADE,
-    CONSTRAINT `fk_board_files_file` FOREIGN KEY (file_id) REFERENCES file_infos(id) ON DELETE CASCADE
+    CONSTRAINT `fk_board_files_file_info` FOREIGN KEY (file_id) REFERENCES file_infos(id) ON DELETE CASCADE
 )
 	ENGINE=InnoDB
     DEFAULT CHARSET = utf8mb4

@@ -20,9 +20,10 @@ public class UserController {
 
     @PostMapping(UserApi.ME + "/profile")
     public ResponseEntity<?> uploadProfile(
-            @AuthenticationPrincipal Long userId,
+//            @AuthenticationPrincipal Long userId,
             @RequestParam("file")MultipartFile file
     ) {
+        Long userId = 1L;
         FileInfo saved = profileService.updateProfile(userId, file);
         return ResponseEntity.ok(saved);
     }
