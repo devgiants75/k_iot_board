@@ -1,7 +1,7 @@
 // board.api.ts
 
-import type { ApiResponse } from "@/types/common/ApiResponse"
-import { publicApi } from "../common/axiosInstance"
+import type { ApiResponse } from "@/types/common/ResponseDto";
+import { publicApi } from "../common/axiosInstance";
 import { BOARD_FILE_PATH } from "./board.file.path";
 import type { BoardListResponse } from "@/types/board/board.dto";
 
@@ -23,7 +23,7 @@ export const boardApi = {
   },
   DOWNLOAD: async (fileId: number): Promise<Blob> => {
     const res = await publicApi.get<Blob>(BOARD_FILE_PATH.DOWNLOAD(fileId), {
-      responseType: 'blob'
+      responseType: "blob",
     });
     return res.data;
   },
@@ -34,7 +34,7 @@ export const boardApi = {
     const res = await publicApi.put<void>(
       BOARD_FILE_PATH.FILES_BY_BOARD(boardId),
       formData,
-      { headers: { "Content-Type": 'multipart/form-data' } }
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
     return res.data;
   },

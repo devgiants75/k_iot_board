@@ -1,8 +1,11 @@
 // user.api.ts
 
-import type { ApiResponse } from "@/types/common/ApiResponse";
+import type { ApiResponse } from "@/types/common/ResponseDto";
 import { privateApi } from "../common/axiosInstance";
-import type { UserDetailResponse, UserListResponse } from "@/types/user/user.dto";
+import type {
+  UserDetailResponse,
+  UserListResponse,
+} from "@/types/user/user.dto";
 import { USER_PATH } from "./user.path";
 
 export const userApi = {
