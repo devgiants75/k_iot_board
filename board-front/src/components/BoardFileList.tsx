@@ -1,5 +1,6 @@
 import { boardApi } from '@/apis/board/board.api';
-import type { BoardListResponse } from '@/types/board/board.dto';
+import type { BoardFileListDto, BoardListResponse } from '@/types/board/board.dto';
+import { downloadFile } from '@/utils/download';
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react'
 
@@ -58,6 +59,24 @@ function BoardFileList({ boardId, onChange }: BoardFileListProps) {
     fetchFiles();
   }, [boardId]);
 
+  //^ === EVENT HANDLER ===
+  const onDownload = async (file: BoardFileListDto) => {
+    await downloadFile(file.fileId, file.originalName);
+  }
+
+  const onDelete = async (fileId: number) => {
+    if (!confirm("파일을 삭제하시겠습니까?")) return;
+
+    try {
+      await boardApi.DELETE_BOARD_FILE(fileId);
+      setFiles(prev => prev.filter(p => p.fileId !== fileId));
+      onChange?.();
+    } catch (e: any) {
+      console.error(e);
+      alert(e?.response?.data?.message ?? "삭제 실패");
+    }
+  }
+
   return (
     <Wrap>
       <h4>첨부파일</h4>
@@ -67,9 +86,10 @@ function BoardFileList({ boardId, onChange }: BoardFileListProps) {
           {files.map(file => (
             <Row key={file.fileId}>
               <Name title={file.originalName}>{file.originalName}</Name>
+              <img src={file.downloadUrl} alt="" />
               <div>
-                <SmallBtn>다운로드</SmallBtn>
-                <SmallBtn>삭제</SmallBtn>
+                <SmallBtn onClick={() => onDownload(file)}>다운로드</SmallBtn>
+                <SmallBtn onClick={() => onDelete(file.fileId)}>삭제</SmallBtn>
               </div>
             </Row>
           ))}
