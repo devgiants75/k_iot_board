@@ -1,11 +1,12 @@
-package org.example.boardback.controller;
+package org.example.boardback.controller.board;
 
 import lombok.RequiredArgsConstructor;
 import org.example.boardback.common.apis.BoardApi;
+import org.example.boardback.dto.ResponseDto;
 import org.example.boardback.dto.board.file.BoardFileListDto;
 import org.example.boardback.dto.board.file.BoardFileUpdateRequestDto;
 import org.example.boardback.entity.file.FileInfo;
-import org.example.boardback.service.impl.BoardFileServiceImpl;
+import org.example.boardback.service.impl.board.BoardFileServiceImpl;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,10 @@ import java.util.List;
 @RestController
 @RequestMapping(BoardApi.ROOT)
 @RequiredArgsConstructor
+/*
+  게시글 파일 정보 CRUD
+  : 게시글 이미지 업로드/수정/삭제/순서 변경 등
+ */
 public class BoardFileController {
     private final BoardFileServiceImpl boardFileService;
 
@@ -33,16 +38,11 @@ public class BoardFileController {
     }
 
     @GetMapping(BoardApi.ID_ONLY + "/files")
-    public ResponseEntity<List<BoardFileListDto>> getFilesByBoard(
+    public ResponseEntity<ResponseDto<List<BoardFileListDto>>> getFilesByBoard(
             @PathVariable Long boardId
     ) {
-        List<BoardFileListDto> files = boardFileService.getFilesByBoard(boardId);
+        ResponseDto<List<BoardFileListDto>> files = boardFileService.getFilesByBoard(boardId);
 
-        if (files == null || files.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 204 No Content
-        }
-
-        System.out.println("files" + files);
         return ResponseEntity.ok(files); // 200 OK
     }
 

@@ -1,4 +1,4 @@
-package org.example.boardback.controller;
+package org.example.boardback.controller.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

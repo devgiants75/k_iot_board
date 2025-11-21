@@ -1,11 +1,10 @@
-package org.example.boardback.controller;
+package org.example.boardback.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import org.example.boardback.common.apis.UserApi;
 import org.example.boardback.entity.file.FileInfo;
 import org.example.boardback.service.impl.ProfileServiceImpl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(UserApi.ROOT)
 @RequiredArgsConstructor
+/*
+  사용자 정보 RUD (Create는 Auth 영역)
+  : 조회 + 수정 시 프로필 이미지 조회 동시에 처리
+ */
 public class UserController {
     private final ProfileServiceImpl profileService;
 

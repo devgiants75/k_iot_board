@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
+    SUCCESS(HttpStatus.OK, "S000", "성공적으로 완료되었습니다.", "success"),
+    CREATED(HttpStatus.CREATED, "S001", "데이터 생성이 성공적으로 완료되었습니다.","created successfully"),
 
     // ===========================
     // Common Errors (Cxxx)
