@@ -1,7 +1,7 @@
 package org.example.boardback.controller.user;
 
 import lombok.RequiredArgsConstructor;
-import org.example.boardback.common.apis.UserApi;
+import org.example.boardback.common.apis.user.UserApi;
 import org.example.boardback.entity.file.FileInfo;
 import org.example.boardback.service.impl.ProfileServiceImpl;
 import org.springframework.http.ResponseEntity;

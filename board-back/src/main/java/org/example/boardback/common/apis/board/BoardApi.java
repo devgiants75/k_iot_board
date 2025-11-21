@@ -1,4 +1,6 @@
-package org.example.boardback.common.apis;
+package org.example.boardback.common.apis.board;
+
+import org.example.boardback.common.apis.ApiBase;
 
 public class BoardApi {
     private BoardApi() {}

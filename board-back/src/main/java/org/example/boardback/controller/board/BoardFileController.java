@@ -1,7 +1,7 @@
 package org.example.boardback.controller.board;
 
 import lombok.RequiredArgsConstructor;
-import org.example.boardback.common.apis.BoardApi;
+import org.example.boardback.common.apis.board.BoardFileApi;
 import org.example.boardback.dto.ResponseDto;
 import org.example.boardback.dto.board.file.BoardFileListDto;
 import org.example.boardback.dto.board.file.BoardFileUpdateRequestDto;
@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @RestController
-@RequestMapping(BoardApi.ROOT)
+@RequestMapping(BoardFileApi.ROOT)
 @RequiredArgsConstructor
 /*
   게시글 파일 정보 CRUD
@@ -28,7 +28,7 @@ import java.util.List;
 public class BoardFileController {
     private final BoardFileServiceImpl boardFileService;
 
-    @PostMapping(BoardApi.ID_ONLY + "/files")
+    @PostMapping(BoardFileApi.UPLOAD)
     public ResponseEntity<?> uploadBoardFiles(
             @PathVariable Long boardId,
             @RequestParam("files") List<MultipartFile> files
@@ -37,7 +37,7 @@ public class BoardFileController {
         return ResponseEntity.ok("업로드 성공");
     }
 
-    @GetMapping(BoardApi.ID_ONLY + "/files")
+    @GetMapping(BoardFileApi.LIST)
     public ResponseEntity<ResponseDto<List<BoardFileListDto>>> getFilesByBoard(
             @PathVariable Long boardId
     ) {
@@ -46,7 +46,7 @@ public class BoardFileController {
         return ResponseEntity.ok(files); // 200 OK
     }
 
-    @GetMapping("/files/{fileId}/download")
+    @GetMapping(BoardFileApi.DOWNLOAD)
     public ResponseEntity<Resource> download(@PathVariable Long fileId) {
         // service 에서 파일 정보 조회
         FileInfo info = boardFileService.getFileInfo(fileId);
@@ -66,14 +66,14 @@ public class BoardFileController {
                 .body(resource);
     }
 
-    @DeleteMapping("/files/{fileId}")
+    @DeleteMapping(BoardFileApi.DELETE)
     public ResponseEntity<Void> deleteBoardFile(@PathVariable Long fileId) {
         boardFileService.deleteBoardFile(fileId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping(
-            value = BoardApi.ID_ONLY + "/files",
+            value = BoardFileApi.UPDATE,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<?> updateBoardFiles(

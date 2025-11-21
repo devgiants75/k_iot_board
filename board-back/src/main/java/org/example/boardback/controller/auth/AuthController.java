@@ -2,7 +2,7 @@ package org.example.boardback.controller.auth;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.boardback.common.apis.AuthApi;
+import org.example.boardback.common.apis.auth.AuthApi;
 import org.example.boardback.dto.ResponseDto;
 import org.example.boardback.dto.auth.request.*;
 import org.example.boardback.dto.auth.response.LoginResponseDto;

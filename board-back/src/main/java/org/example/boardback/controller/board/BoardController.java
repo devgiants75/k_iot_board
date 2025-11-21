@@ -1,7 +1,6 @@
 package org.example.boardback.controller.board;
 
 import lombok.RequiredArgsConstructor;
-import org.example.boardback.common.apis.UserApi;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
