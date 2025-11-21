@@ -15,6 +15,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class BoardServiceImpl implements BoardService {
     @Override
+    public ResponseDto<BoardResponseDto> getBoard(Long boardId) {
+        return null;
+    }
+
+    @Override
     public ResponseDto<BoardResponseDto> createBoard(BoardCreateRequestDto request) {
         return null;
     }
