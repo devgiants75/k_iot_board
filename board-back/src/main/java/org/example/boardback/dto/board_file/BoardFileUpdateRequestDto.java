@@ -1,4 +1,4 @@
-package org.example.boardback.dto.board.file;
+package org.example.boardback.dto.board_file;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

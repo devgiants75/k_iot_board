@@ -9,5 +9,5 @@ public class BoardCommentApi {
     // Comment
     // ==================================================
     public static final String ROOT = ApiBase.BASE + "/boards/{boardId}/comments";
-    public static final String COMMENTS_BY_ID = ROOT + "/{commentId}";
+    public static final String COMMENTS_BY_ID = "/{commentId}";
 }
