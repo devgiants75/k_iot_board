@@ -17,3 +17,4 @@ export interface UserListItemResponse {
 
 // 리스트 응답 데이터
 export type UserListResponse = UserListItemResponse[];
+
