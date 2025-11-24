@@ -45,7 +45,7 @@ CREATE TABLE users (
 	id BIGINT AUTO_INCREMENT PRIMARY KEY,
     
     username VARCHAR(50) NOT NULL COMMENT '로그인 ID',
-    password VARCHAR(255) NOT NULL COMMENT 'Bcrypt 암호화 비밀번호',
+    password VARCHAR(255) NULL COMMENT 'Bcrypt 암호화 비밀번호, 로컬 계정만 사용(소셜 계정은 NULL)',
     email VARCHAR(255) NOT NULL COMMENT '사용자 이메일',
     nickname VARCHAR(50) NOT NULL COMMENT '닉네임',
     
