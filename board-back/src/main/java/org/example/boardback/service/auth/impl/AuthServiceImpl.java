@@ -1,4 +1,4 @@
-package org.example.boardback.service.impl.auth;
+package org.example.boardback.service.auth.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
