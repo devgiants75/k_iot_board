@@ -65,7 +65,7 @@ CREATE TABLE users (
     CONSTRAINT `uk_users_provider_provider_id` UNIQUE(provider, provider_id),
     
     CONSTRAINT `chk_users_gender` CHECK(gender IN ('MALE', 'FEMALE', 'OTHER', 'NONE')),
-    CONSTRAINT `chk_users_provider` CHECK(gender IN ('LOCAL', 'GOOGLE', 'KAKAO', 'NAVER')),
+    CONSTRAINT `chk_users_provider` CHECK(provider IN ('LOCAL', 'GOOGLE', 'KAKAO', 'NAVER')),
     
     CONSTRAINT `fk_users_profile_file` FOREIGN KEY (profile_file_id) REFERENCES file_infos(id) ON DELETE SET NULL
 )
