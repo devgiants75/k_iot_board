@@ -37,5 +37,9 @@ out/
 .vscode/
 
 ### secret properties ###
-application-sercret.properties
+application.properties
+application-dev.properties
+application-secret.properties
+**/application.properties
+**/application-dev.properties
 **/application-sercret.properties
