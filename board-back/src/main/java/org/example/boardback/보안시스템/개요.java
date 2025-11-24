@@ -94,7 +94,6 @@ package org.example.boardback.보안시스템;
 *  2-4. 회원가입 흐름 (AuthServiceImpl.signup())
 *  2-5. 로그인 흐름 (AuthServiceImpl.login())
 *
-*
 * */
 public class 개요 {
 }

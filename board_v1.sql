@@ -52,13 +52,21 @@ CREATE TABLE users (
     gender VARCHAR(10) COMMENT '성별',
     profile_file_id BIGINT NULL COMMENT '프로필 이미지 파일 ID',
     
+    provider VARCHAR(20) NOT NULL,
+    provider_id VARCHAR(100),
+    email_verified BOOLEAN NOT NULL,
+    
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     
     CONSTRAINT `uk_users_username` UNIQUE(username),
     CONSTRAINT `uk_users_email` UNIQUE(email),
     CONSTRAINT `uk_users_nickname` UNIQUE(nickname),
+    CONSTRAINT `uk_users_provider_provider_id` UNIQUE(provider, provider_id),
+    
     CONSTRAINT `chk_users_gender` CHECK(gender IN ('MALE', 'FEMALE', 'OTHER', 'NONE')),
+    CONSTRAINT `chk_users_provider` CHECK(gender IN ('LOCAL', 'GOOGLE', 'KAKAO', 'NAVER')),
+    
     CONSTRAINT `fk_users_profile_file` FOREIGN KEY (profile_file_id) REFERENCES file_infos(id) ON DELETE SET NULL
 )
 	ENGINE=InnoDB
