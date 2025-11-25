@@ -77,12 +77,16 @@ CREATE TABLE users (
 # === ROLES (권한) === #
 CREATE TABLE roles (
 	role_name VARCHAR(30) PRIMARY KEY,
-    CONSTRAINT `chk_roles_role_name` CHECK(role_name IN ('ROLE_USER', 'ROLE_ADMIN', 'ROLE_MANAGER'))
+    CONSTRAINT `chk_roles_role_name` CHECK(role_name IN ('USER', 'ADMIN', 'MANAGER'))
 )
 	ENGINE=InnoDB
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_unicode_ci
     COMMENT = '사용자 권한 테이블';
+    
+INSERT INTO roles
+VALUES
+	("USER"), ("ADMIN"), ("MANAGER");
 
 # === USER_ROLES (유저-권한 매핑) === #
 CREATE TABLE user_roles (
