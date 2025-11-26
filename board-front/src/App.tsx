@@ -5,6 +5,8 @@ import { userApi } from "./apis/user/user.api";
 import { Link, Route, Routes } from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage";
 import OAuth2CallbackPage from "./pages/OAuth2CallbackPage";
+import { GlobalStyle } from "./styles/global";
+import Layout from "./components/layout/Layout";
 
 export default function App() {
   const { isInitialized, accessToken, user, setUser } = useAuthStore();
@@ -34,26 +36,10 @@ export default function App() {
 
   return (
     <>
-      {isLoggedIn ? (
-        <>
-          로그인이 된 경우
-        </>
-        // <MainRouter />  // 로그인이 된 경우
-      ) : (
-        // <AuthRouter />  // 로그인 필요
-        <>
-          로그인 필요
-          <Link to="/login">로그인</Link>
-          <Routes>
-            <Route path="/login" element={<LoginPage />}/>
-            <Route path="/register" element={<RegisterPage />}/>
-            
-            {/* OAuth2 소셜 로그인 콜백 */}
-            <Route path="/oauth2/callback" element={<OAuth2CallbackPage />}/>
-          </Routes>
-          
-        </>
-      )}
+      <GlobalStyle />
+      <Layout>
+        <div>Main-Dashboard</div>
+      </Layout>
     </>
   );
 }
