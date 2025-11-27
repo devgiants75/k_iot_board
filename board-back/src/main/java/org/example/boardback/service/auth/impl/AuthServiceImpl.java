@@ -235,9 +235,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(ErrorCode.DUPLICATE_USER);
         }
 
-        System.out.println("provider name:" + request.provider().name());
-        System.out.println("gender:" + request.gender());
-
         // User 엔티티 생성 + 저장
         User newUser = User.builder()
                 .username(request.username())
