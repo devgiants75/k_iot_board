@@ -17,6 +17,9 @@ export const paymentApi = {
       ResponseDto<PaymentResponse | KakaoReadyResponse>
     >("/api/v1/payments", body);
 
+    if (!res.data.data) {
+      throw new Error("결제 생성 실패: 응답 데이터 없음");
+    }
     return res.data.data;
   },
 
@@ -44,7 +47,12 @@ export const paymentApi = {
       `/api/v1/payments/${paymentId}/refund`,
       body
     );
-    return res.data.data;
+    
+    if (!res.data.status) {
+    throw new Error(res.data.message ?? "결제 환불 실패");
+  }
+
+    return;
   },
 
   // 결제 수단 조회
@@ -52,6 +60,9 @@ export const paymentApi = {
     const res = await privateApi.get<ResponseDto<PaymentMethod[]>>(
       "/api/v1/payments/methods"
     );
+    if (!res.data.data) {
+      throw new Error("결제 생성 실패: 응답 데이터 없음");
+    }
     return res.data.data;
   },
 };
